@@ -1,0 +1,605 @@
+<Scoring>
+    scores: scores.__self__
+    FloatLayout:
+        id: Layout1
+        size: root.width, root.height
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        canvas.before:
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: "Gbg.png"
+        Label:
+            id: scores
+            text: '0'
+            pos_hint: {'center_x': .53,'center_y': .95}
+
+        Label:
+            id: scoreschar
+            text: 'Score: '
+            pos_hint: {'center_x': .47,'center_y': .95}
+        Button:
+            id: StartButton
+            text: "Start Game"
+            background_normal: "transparent.png"
+            background_down: "transparent.png"
+            on_release:
+                self.disabled = True
+                self.opacity = 0
+                app.game_start()
+<Home>
+    screen_manager: screen_manager
+    ScreenManager:
+        id: screen_manager
+        Screen:
+            id: home_screen
+            name: "home_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas.before:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                FloatLayout:
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Image:
+                        source: "SnekT.png"
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 350
+                        height: 350
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.8}
+                    Button:
+                        text: "Start"
+                        font_size: "20sp"
+                        bold: True
+                        size_hint: 0.4,.06
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+                        color: "white"
+                        background_normal: ''
+                        background_color: (0,0,0,0)
+                        canvas.before:
+                            RoundedRectangle:
+                                radius: [20]
+                                size: self.size
+                                pos: self.pos
+                                source: "Bgb.png"
+#app.call_scoring()
+                        on_release: 
+                            screen_manager.current = "gameplay_screen"
+                            screen_manager.transition.direction = "up"
+                    Button:
+                        text: "How To Play"
+                        font_size: "20sp"
+                        bold: True
+                        size_hint: 0.4,.06
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        color: "white"
+                        background_normal: ''
+                        background_color: (0,0,0,0)
+                        canvas.before:
+                            RoundedRectangle:
+                                radius: [20]
+                                size: self.size
+                                pos: self.pos
+                                source: "Bgb.png"
+                        on_release: 
+                            screen_manager.current = "Tutorial_screen"
+                            screen_manager.transition.direction = "right"
+                        
+                    Button:
+                        text: "Leaderboard"
+                        font_size: "20sp"
+                        bold: True
+                        size_hint: 0.4,.06
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                        color: "white"
+                        background_normal: ''
+                        background_color: (0,0,0,0)
+                        canvas.before:
+                            RoundedRectangle:
+                                radius: [20]
+                                size: self.size
+                                pos: self.pos
+                                source: "Bgb.png"
+                        on_release: 
+                            screen_manager.current = "Leaderboard_screen"
+                            screen_manager.transition.direction = "left"
+                            
+                    Image:
+                        source: "SnekIcoM2.gif"
+                        duration: 1/30
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 90
+                        height: 90
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.15}
+
+                    Label:
+                        text: "Innovators: Gabrentina || Manzano || Quiambao || Valle"
+                        halign: "center"
+                        font_size: "16.7sp"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+                        color: "white"
+                        size_hint: (0.03,0.02)
+        Screen:
+            id: gameplay_screen
+            name: "gameplay_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                scores: scores.__self__
+                FloatLayout:
+                    id: Layout1
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                            source: "Gbg.png"
+                    Label:
+                        id: scores
+                        text: '0'
+                        pos_hint: {'center_x': .53,'center_y': .95}
+
+                    Label:
+                        id: scoreschar
+                        text: 'Score: '
+                        pos_hint: {'center_x': .47,'center_y': .95}
+                    
+                    Button:
+                        id: StartButton
+                        text: "Start Game"
+                        background_normal: "transparent.png"
+                        background_down: "transparent.png"
+                        on_release:
+                            self.disabled = True
+                            self.opacity = 0
+                            app.game_start()
+        Screen:
+            id: gameover_screen
+            name: "gameover_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                scores: scores.__self__
+                FloatLayout:
+                    id: Layout1
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                            source: "Gbg.png"
+                    Label:
+                        id: scores2
+                        text: '0'
+                        font_size: '70sp'
+                        pos_hint: {'center_x': .70,'center_y': .75}
+
+                    Label:
+                        id: scoreschar
+                        text: 'Score: '
+                        font_size: '70sp'
+                        pos_hint: {'center_x': .45,'center_y': .75}
+                    
+                    Button:
+                        id: GameoverButton
+                        text: "Game Over"
+                        background_normal: "transparent.png"
+                        background_down: "transparent.png"
+                        on_release:
+                            screen_manager.current = "home_screen"
+                            screen_manager.transition.direction = "down"
+                            app.unsched_snake()
+        Screen:
+            id: highscore_screen
+            name: "highscore_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                scores: scores.__self__
+                FloatLayout:
+                    id: Layout1
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    canvas.before:
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                            source: "Gbg.png"
+                    Label:
+                        id: scores1
+                        text: '0'
+                        font_size: '70sp'
+                        pos_hint: {'center_x': .70,'center_y': .75}
+
+                    Label:
+                        id: scoreschar
+                        text: 'Score: '
+                        font_size: '70sp'
+                        pos_hint: {'center_x': .45,'center_y': .75}
+                    
+                    Button:
+                        id: GameoverButton
+                        text: "New High Score! Input your name and\nClick Anywhere to Continue"
+                        halign: "center"
+                        font_size: '30sp'
+                        background_normal: "transparent.png"
+                        background_down: "transparent.png"
+                        disabled: True
+                        on_release:
+                            screen_manager.current = "Leaderboard_screen"
+                            screen_manager.transition.direction = "up"
+                            app.unsched_snake()
+                    TextInput:
+                        id: username
+                        text: ""
+                        halign: "center"
+                        multiline: False
+                        font_size: "30sp"
+                        pos_hint: {'center_x': .5,'center_y': .40}
+                        size_hint: 0.6,.06
+                        on_text: 
+                            GameoverButton.disabled = False if self.text is not '' else True
+        Screen:
+            id: Tutorial_screen
+            name: "Tutorial_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas.before:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                FloatLayout:
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Image:
+                        source: "SnekT.png"
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 350
+                        height: 350
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.9}
+                    Label:
+                        text:'How to Play'
+                        bold: 'yes'
+                        font_size: '30sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'______________________________________'
+                        bold: 'yes'
+                        font_size: '30sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.74}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'Welcome to SNEK the Game!\nBefore we start, here are the instructions of how to play:'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.68}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'- Simply eat the fruits scattered around the map\nand achieve highest score possible'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.57}
+
+                    Label:
+                        text:"- Don't let THE SNEK touch itself or any of the\nwalls, else it will be GAME OVER"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.48, 'center_y': 0.49}
+
+                    Label:
+                        text:'Climb onto the leaderboards, higher glory awaits!'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                        size_hint: (0.03,0.02)
+                    Button:
+                        size_hint: 0.2,.1
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+                        color: "white"
+                        background_normal: ''
+                        background_color: (0,0,0,0)
+                        canvas.before:
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                                source: "backB.png"
+                        on_release: 
+                            screen_manager.current = "home_screen"
+                            screen_manager.transition.direction = "left"
+                    Image:
+                        source: "SnekIcoM2.gif"
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 90
+                        height: 90
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.15}
+
+                    Label:
+                        text: "Innovators: Gabrentina || Manzano || Quiambao || Valle"
+                        halign: "center"
+                        font_size: "16.7sp"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+                        color: "white"
+                        size_hint: (0.03,0.02)
+        Screen:
+            id: Leaderboard_screen
+            name: "Leaderboard_screen"
+            BoxLayout:
+                orientation: "vertical"
+                size: root.width, root.height
+                canvas.before:
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                        source: "Gbg.png"
+                FloatLayout:
+                    size: root.width, root.height
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Image:
+                        source: "SnekT.png"
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 350
+                        height: 350
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.9}
+                    Label:
+                        text:'Leaderboard'
+                        bold: 'yes'
+                        font_size: '30sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'Name'
+                        bold: 'yes'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.75}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'Points'
+                        bold: 'yes'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.75}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        text:'______________________________________'
+                        bold: 'yes'
+                        font_size: '30sp'
+                        color: 'white'
+                        halign: "center"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.74}
+                        size_hint: (0.03,0.02)
+                    Label:
+                        id: OneName
+                        text:"EMG"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.68}
+                    Label:
+                        id: OneScore
+                        text:"20"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.68}
+                    Label:
+                        text:'---------------------------------------'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.68}
+                    Label:
+                        id: TwoName
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.60}
+                    Label:
+                        id: TwoScore
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.60}
+                    Label:
+                        text:'---------------------------------------'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.60}
+                    Label:
+                        id: ThreeName
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.52}
+                    Label:
+                        id: ThreeScore
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.52}
+                    Label:
+                        text:'---------------------------------------'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.52}
+                    Label:
+                        id: FourName
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.44}
+                    Label:
+                        id: FourScore
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.44}
+                    Label:
+                        text:'---------------------------------------'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.44}
+                    Label:
+                        id: FiveName
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.15, 'center_y': 0.36}
+                    Label:
+                        id: FiveScore
+                        text:"---"
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.85, 'center_y': 0.36}
+                    Label:
+                        text:'---------------------------------------'
+                        font_size: '20sp'
+                        color: 'white'
+                        halign: "left"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.36}
+                    Button:
+                        size_hint: 0.2,.1
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+                        color: "white"
+                        background_normal: ''
+                        background_color: (0,0,0,0)
+                        canvas.before:
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                                source: "backB.png"
+                        on_release: 
+                            screen_manager.current = "home_screen"
+                            screen_manager.transition.direction = "right"
+
+                    Image:
+                        source: "SnekIcoM2.gif"
+                        allow_stretch: True
+                        keep_ratio: True
+                        size_hint_y: None
+                        size_hint_x: None
+                        width: 90
+                        height: 90
+                        pos_hint: {"center_x": 0.5, "center_y" : 0.15}
+
+                    Label:
+                        text: "Innovators: Gabrentina || Manzano || Quiambao || Valle"
+                        halign: "center"
+                        font_size: "16.7sp"
+                        size_hint: None, None
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+                        color: "white"
+                        size_hint: (0.03,0.02)
+            
+<Sprite>
+    bgcolor: 1, 1, 1, 1
+    size_hint: None, None
+    size: [app.sprite_size] * 2
+    pos: [x * app.sprite_size for x in self.coord]
+    canvas:
+        Color:
+            rgba: self.bgcolor
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Fruit>
+    bgcolor: 0, 1, 0, 1
+
+RelativeLayout:
+    canvas:
+        Color:
+            rgba: 1, 0, 0, app.alpha
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
