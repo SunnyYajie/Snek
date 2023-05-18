@@ -20,8 +20,11 @@ import time
 import os
 import sqlite3
 
-Window.size = 600, 800
+#Window.size = 600, 800
 
+########################
+#Window and sprite size#
+########################
 SPRITE_SIZE = sp(20)
 COLS = int(Window.width/ SPRITE_SIZE)
 ROWS = int(Window.height/ SPRITE_SIZE)
@@ -55,7 +58,6 @@ direction_keys = {'a': LEFT,
                   'w': UP,
                   'd': RIGHT,
                   's': DOWN}
-direction_swipe = None
 
 class Sprite(Widget):
     coord = kp.ListProperty([0, 0])
@@ -69,12 +71,10 @@ class Fruit(Sprite):
 class Home(FloatLayout):
     pass
 
-class Scoring(Widget):
-    pass
-
-    
+#####################
+#Main Gameplay Class#
+#####################
 class Snake(App):
-    ultimate_score = score = kp.NumericProperty(0)
     score = kp.NumericProperty(0)
     sprite_size = kp.NumericProperty(SPRITE_SIZE)
     
@@ -87,56 +87,36 @@ class Snake(App):
     
     direction = kp.StringProperty(RIGHT, options = (LEFT, UP, RIGHT, DOWN))
     buffer_direction = kp.StringProperty(RIGHT, options = (LEFT, UP, RIGHT, DOWN, ''))
-    block_input = kp.BooleanProperty(False)
+    block_input = kp.BooleanProperty(True)
     
     alpha = kp.NumericProperty(0)
     
     checker = kp.NumericProperty(CHECKER)
+    #############
+    #Swipe Input#
+    #############
     def swipe_handler(self, instance, touch, *args):
         dx = touch.x - touch.opos[0]
         dy = touch.y - touch.opos[1]
-        if abs(dx) > abs(dy):
-            if dx > 0:
-                print("Swipe right")
-                self.try_change_direction(RIGHT)
+        try:
+            if abs(dx) > abs(dy):
+                if dx > 0:
+                    self.try_change_direction(RIGHT)
+                else:
+                    self.try_change_direction(LEFT)
             else:
-                print("Swipe left")
-                self.try_change_direction(LEFT)
-        else:
-            if dy > 0:
-                print("Swipe up")
-                self.try_change_direction(UP)
-            else:
-                print("Swipe down")
-                self.try_change_direction(DOWN)
-        
-        
-        """dx = touch - touch.opos[0]
-        dy = touch - touch.opos[1]
-        if abs(dx) > abs(dy):
-            self.movement_y = 0
-            if dx > 0:
-                self.movement_x = self.try_change_direction(LEFT)
-                print(self.movement_x)
-            else:
-                self.movement_x = - self.try_change_direction(RIGHT)
-                print(self.movement_x)
-        else:
-            self.movement_x = 0
-            if dy > 0:
-                self.movement_y = self.try_change_direction(UP)
-                print(self.movement_y)
-            else:
-                self.movement_y = - self.try_change_direction(DOWN)
-                print(self.movement_y)"""
-        
-
-    """def refresh(self):
-        Clock.schedule_interval(self.move, MOVESPEED)
-        self.snake.clear()"""
+                if dy > 0:
+                    self.try_change_direction(UP)
+                else:
+                    self.try_change_direction(DOWN)
+        except KeyError:
+            pass
     
-    
+    ###################
+    #Start of Gameplay#
+    ###################
     def game_start(self):
+        self.root.ids.scores.text = "0"
         self.root.ids.scores1.text = "0"
         self.root.ids.scores2.text = "0"
         self.fruit_sprite = Fruit()
@@ -144,18 +124,11 @@ class Snake(App):
         self.fruit = self.new_fruit_location
         self.length = LENGTH
         self.checker += 1
-        #if self.checker <= 1:
         Clock.schedule_interval(self.move, MOVESPEED)
         Clock.unschedule(self.clear_snake)
-        
-        #self.refresh()
         self.score = 0
-        
-        print(f"checker: {self.checker}")
-        
-        Window.bind(on_keyboard = self.key_handler)
         Window.bind(on_touch_up = self.swipe_handler)
-        self.block_input = False
+        Window.bind(on_keyboard = self.key_handler)
     
     def on_fruit(self, *args):
         if not self.fruit_sprite.parent:
@@ -199,7 +172,6 @@ class Snake(App):
                 return fruit
     
     def move(self, *args):
-        self.block_input = False
         new_head = [sum(x) for x in zip(self.head, direction_values[self.direction])]
 
         if new_head in self.snake:
@@ -218,7 +190,6 @@ class Snake(App):
             self.length += 1
             self.score += 1
             self.root.ids.scores.text = str(int(self.root.ids.scores.text) + 1)
-            print(f"scores: {self.root.ids.scores.text}")
             self.root.ids.scores1.text = str(int(self.root.ids.scores1.text) + 1)
             self.root.ids.scores2.text = str(int(self.root.ids.scores2.text) + 1)
             
@@ -227,84 +198,102 @@ class Snake(App):
             self.buffer_direction = ''
         
         self.head = new_head
+        self.block_input = False
     
     def check_inbounds(self, pos):
         return all(0 <= pos[x] < dim for x, dim in enumerate([COLS, ROWS]))
     
     def if_highscore(self, *args):
         inp_name = self.root.ids.username.text
-        inp_score = self.root.ids.scores1.text
-        dbconn = sqlite3.connect("C:/Users/Gab Fam/Desktop/Kivy dev/kivy_venv/Codes/Snake game/leaderboard.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        inp_score = self.root.ids.scores.text
+        dbconn = sqlite3.connect("leaderboard.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         dbcursor = dbconn.cursor()
         dbcursor.execute(
             "INSERT INTO leaderboardtable (name, highscore) VALUES (:var_name, :var_highscore)", 
             {
                 'var_name' : inp_name,
-                'var_highscore' : inp_score
+                'var_highscore' : inp_score,
             })
-        self.root.ids.scores1.text = "0"
-        self.root.ids.scores2.text = "0"
         dbconn.commit()
         dbconn.close()
         
-    """def check_score(self, *args):
-        find_name = self.root.ids.username.text
-        find_score = self.root.ids.scores1.text
-        dbconn = sqlite3.connect("C:/Users/Gab Fam/Desktop/Kivy dev/kivy_venv/Codes/Snake game/leaderboard.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    def check_score(self, *args):
+        dbconn = sqlite3.connect("leaderboard.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         dbcursor = dbconn.cursor()
-        dbcursor.execute(
-            "SELECT * FROM leaderboardtable WHERE leaderboardtable.name = :var_name and leaderboardtable.highscore = :var_highscore",
-            {
-                'var_name' : find_name,
-                'var_highscore' : find_score,
-            })
+        dbcursor.execute("SELECT * FROM leaderboardtable ORDER BY highscore DESC LIMIT 5;")
         record = dbcursor.fetchall()
-        print(f"record: {record}")
-        print("wantaym")
+        if len(record) >= 1:
+            self.root.ids.OneName.text = record[0][0]
+            self.root.ids.OneScore.text = str(record[0][1])
+        else:
+            self.root.ids.OneName.text = "---"
+            self.root.ids.OneScore.text = "---"
+            
+        if len(record) >= 2:
+            self.root.ids.TwoName.text = record[1][0]
+            self.root.ids.TwoScore.text = str(record[1][1])
+        else:
+            self.root.ids.TwoName.text = "---"
+            self.root.ids.TwoScore.text = "---"
+        
+        if len(record) >= 3:
+            self.root.ids.ThreeName.text = record[2][0]
+            self.root.ids.ThreeScore.text = str(record[2][1])
+        else:
+            self.root.ids.ThreeName.text = "---"
+            self.root.ids.ThreeScore.text = "---"
+        
+        if len(record) >= 4:
+            self.root.ids.FourName.text = record[3][0]
+            self.root.ids.FourScore.text = str(record[3][1])
+        else:
+            self.root.ids.FourName.text = "---"
+            self.root.ids.FourScore.text = "---"
+        
+        if len(record) >= 5:
+            self.root.ids.FiveName.text = record[4][0]
+            self.root.ids.FiveScore.text = str(record[4][1])
+        else:
+            self.root.ids.FiveName.text = "---"
+            self.root.ids.FiveScore.text = "---"
+        
         dbconn.commit()
-        dbconn.close()"""
+        dbconn.close()
         
     def on_death(self, *args):
-        ulti_score = self.root.ids.scores1.text
-        if self.root.ids.scores1.text >= "10":
+        dbconn = sqlite3.connect("leaderboard.db", detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        dbcursor = dbconn.cursor()
+        dbcursor.execute("SELECT * FROM leaderboardtable ORDER BY highscore DESC LIMIT 5;")
+        record = dbcursor.fetchall()
+        if int(self.root.ids.scores1.text) > record[0][1]:
             self.root.ids.screen_manager.current = "highscore_screen"
             self.root.ids.screen_manager.transition.direction = "up"
         else:
             self.root.ids.screen_manager.current = "gameover_screen"
             self.root.ids.screen_manager.transition.direction = "down"
-        
+        dbconn.commit()
+        dbconn.close()
             
     def clear_snake(self, *args):
         self.snake.clear()
-        self.move()
+        excempt_widgets = [self.root.ids.screen_manager]
+        children = self.root.children
+        for child in children:
+            if child not in excempt_widgets:
+                self.root.remove_widget(child)
         
     def unsched_snake(self):
         Clock.unschedule(self.clear_snake)
     
     def die(self):
-        self.block_input = True
-        excempt_widgets = [self.root.ids.screen_manager]
-        children = self.root.children
-            
-        for child in children:
-            if child not in excempt_widgets:
-                self.root.remove_widget(child)
-        
         self.root.ids.StartButton.disabled = False
         self.root.ids.StartButton.opacity = 1
-        self.root.ids.scores.text = "0"
         self.alpha = ALPHA
         self.length = 0
-        #self.check_score
         self.on_death()
         Clock.unschedule(self.move)
-        Clock.schedule_interval(self.clear_snake, 0.3)
+        Clock.schedule_interval(self.clear_snake, 0.085)
         
-
-        
-        
-            
-        #Clock.schedule_interval(self.clear_snake, 0.085)
         
         
         
