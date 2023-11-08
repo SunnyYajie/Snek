@@ -31,7 +31,7 @@ ROWS = int(Window.height/ SPRITE_SIZE)
 
 
 LENGTH = 4
-MOVESPEED = .085
+MOVESPEED = .087
 ALPHA = .5
 
 
